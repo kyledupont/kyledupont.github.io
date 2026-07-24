@@ -187,6 +187,23 @@
   .edu-line { font-size: 0.85rem; color: var(--text-faint); }
 
   /* timelines (homelab + lessons) */
+  .timeline-wrap { position: relative; }
+  .timeline-scroll {
+    max-height: 22rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .timeline-scroll::-webkit-scrollbar { width: 7px; }
+  .timeline-scroll::-webkit-scrollbar-track { background: transparent; }
+  .timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+  .timeline-scroll::-webkit-scrollbar-thumb:hover { background: var(--hub); }
+  .timeline-fade {
+    position: absolute; left: 0; right: 0.5rem; bottom: 0; height: 2.2rem;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+  }
   .timeline { list-style: none; margin: 0; padding: 0; }
   .timeline li {
     display: grid;
@@ -339,25 +356,36 @@
 
   <section class="homelab-updates">
     <h2>Homelab Updates &amp; Projects <a class="h2-link" href="https://github.com/kyledupont/Homelab" target="_blank" rel="noopener">full build log ↗</a></h2>
-    <ul class="timeline">
-      <li><span class="meta-date">2026-07-24</span><p>Stood up a single-node K3s Kubernetes cluster (Terraform-provisioned, Ansible-bootstrapped), deployed and load-tested a real workload, then published the companion <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">system map</a> live on GitHub Pages.</p></li>
-      <li><span class="meta-date">2026-07-23</span><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push; widened Ansible to a second host over a dedicated SSH keypair; shipped the first production service (PostgreSQL) with secrets in Ansible Vault, not plaintext.</p></li>
-      <li><span class="meta-date">2026-07-22</span><p>Brought Terraform into the lab against the Proxmox API — working through real least-privilege token/ACL design split across compute, storage, and networking permission domains.</p></li>
-      <li><span class="meta-date">2026-07-18</span><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude.</p></li>
-      <li><span class="meta-date">2026-07-17</span><p>Root-caused a network throughput bottleneck end-to-end — switch hardware, NIC negotiation, and a misleading single-threaded speed-test tool.</p></li>
-      <li><span class="meta-date">2026-07-14</span><p>Stood up the lab's Proxmox foundation and first VMs, git-tracked as infrastructure-as-documentation from day one.</p></li>
-    </ul>
+    <div class="timeline-wrap">
+      <div class="timeline-scroll">
+        <ul class="timeline">
+          <li><span class="meta-date">2026-07-24</span><p>Stood up a single-node K3s Kubernetes cluster (Terraform-provisioned, Ansible-bootstrapped), deployed and load-tested a real workload, then published the companion <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">system map</a> live on GitHub Pages.</p></li>
+          <li><span class="meta-date">2026-07-23</span><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push; widened Ansible to a second host over a dedicated SSH keypair; shipped the first production service (PostgreSQL) with secrets in Ansible Vault, not plaintext.</p></li>
+          <li><span class="meta-date">2026-07-22</span><p>Brought Terraform into the lab against the Proxmox API — working through real least-privilege token/ACL design split across compute, storage, and networking permission domains.</p></li>
+          <li><span class="meta-date">2026-07-18</span><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude.</p></li>
+          <li><span class="meta-date">2026-07-17</span><p>Root-caused a network throughput bottleneck end-to-end — switch hardware, NIC negotiation, and a misleading single-threaded speed-test tool.</p></li>
+          <li><span class="meta-date">2026-07-14</span><p>Stood up the lab's Proxmox foundation and first VMs, git-tracked as infrastructure-as-documentation from day one.</p></li>
+        </ul>
+      </div>
+      <div class="timeline-fade" aria-hidden="true"></div>
+    </div>
   </section>
 
   <section class="lessons">
     <h2>Recently Learned <a class="h2-link" href="https://github.com/kyledupont/Homelab/blob/main/Docs/LessonsLearned.md" target="_blank" rel="noopener">full log ↗</a></h2>
-    <ul class="timeline">
-      <li><span class="meta-date">2026-07-23</span><p>NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot — a trap for any containerized app on network-backed storage, not just Postgres.</p></li>
-      <li><span class="meta-date">2026-07-23</span><p>Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code> — pointing it at a host with the same name does nothing, silently.</p></li>
-      <li><span class="meta-date">2026-07-22</span><p>Proxmox API tokens need their own explicit ACL grants across compute, storage, and network domains — privilege separation means a token doesn't inherit its parent user's permissions.</p></li>
-      <li><span class="meta-date">2026-07-21</span><p>Single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool (Ookla CLI, iperf3 -P) is the only reliable read on a fast link.</p></li>
-      <li><span class="meta-date">2026-07-18</span><p>For a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></li>
-    </ul>
+    <div class="timeline-wrap">
+      <div class="timeline-scroll">
+        <ul class="timeline">
+          <li><span class="meta-date">2026-07-24</span><p>A "this text should read as secondary/quiet" design choice still needs an actual contrast-ratio check — the old faint text tier looked fine and measured 2.43:1 in light mode, well under WCAG AA's 4.5:1 minimum.</p></li>
+          <li><span class="meta-date">2026-07-23</span><p>NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot — a trap for any containerized app on network-backed storage, not just Postgres.</p></li>
+          <li><span class="meta-date">2026-07-23</span><p>Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code> — pointing it at a host with the same name does nothing, silently.</p></li>
+          <li><span class="meta-date">2026-07-22</span><p>Proxmox API tokens need their own explicit ACL grants across compute, storage, and network domains — privilege separation means a token doesn't inherit its parent user's permissions.</p></li>
+          <li><span class="meta-date">2026-07-21</span><p>Single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool (Ookla CLI, iperf3 -P) is the only reliable read on a fast link.</p></li>
+          <li><span class="meta-date">2026-07-18</span><p>For a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></li>
+        </ul>
+      </div>
+      <div class="timeline-fade" aria-hidden="true"></div>
+    </div>
   </section>
 
   <section class="live-activity">
