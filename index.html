@@ -356,40 +356,26 @@
   </section>
 
   <section class="homelab-updates">
-    <h2>Homelab Updates &amp; Projects <a class="h2-link" href="https://github.com/kyledupont/Homelab" target="_blank" rel="noopener">full build log ↗</a></h2>
-    <p class="section-note">Recent entries from an actively maintained lab — scroll for more, not the starting point.</p>
+    <h2>Homelab Log
+      <a class="h2-link" href="https://github.com/kyledupont/Homelab" target="_blank" rel="noopener">build log ↗</a>
+      <a class="h2-link" href="https://github.com/kyledupont/Homelab/blob/main/Docs/LessonsLearned.md" target="_blank" rel="noopener">lessons learned ↗</a>
+    </h2>
+    <p class="section-note">What got built, and what it taught along the way — scroll for more, not the starting point.</p>
     <div class="timeline-wrap">
       <div class="timeline-scroll">
         <ul class="timeline">
-          <li><span class="meta-date">2026-07-28</span><p>Deployed Pi-hole for network-wide DNS and ad blocking, diagnosing a subtle failure along the way where DNS queries reached the container fine but got silently ignored — root-caused to Pi-hole's own listening-mode config rather than a firewall, then confirmed real ads actually getting blocked end-to-end.</p></li>
+          <li><span class="meta-date">2026-07-28</span><p>Deployed Pi-hole for network-wide DNS and ad blocking, diagnosing a subtle failure along the way where DNS queries reached the container fine but got silently ignored — root-caused to Pi-hole's own listening-mode config rather than a firewall, then confirmed real ads actually getting blocked end-to-end. <b>Lesson:</b> a completed TCP handshake with no response — especially from non-loopback sources only — points at the application silently filtering, not the network dropping it; a different failure class from "unreachable," with a different fix.</p></li>
           <li><span class="meta-date">2026-07-26</span><p>Formalized a network isolation boundary — the media server VM is deliberately kept separate from the automation/control-plane host, so it can eventually be exposed to the internet without widening the blast radius of the machine holding SSH keys and CI credentials.</p></li>
           <li><span class="meta-date">2026-07-24</span><p>Stood up a single-node K3s Kubernetes cluster (Terraform-provisioned, Ansible-bootstrapped), deployed and load-tested a real workload, then published the companion <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">system map</a> live on GitHub Pages.</p></li>
-          <li><span class="meta-date">2026-07-23</span><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push; widened Ansible to a second host over a dedicated SSH keypair; shipped the first production service (PostgreSQL) with secrets in Ansible Vault, not plaintext.</p></li>
-          <li><span class="meta-date">2026-07-22</span><p>Brought Terraform into the lab against the Proxmox API — working through real least-privilege token/ACL design split across compute, storage, and networking permission domains.</p></li>
-          <li><span class="meta-date">2026-07-21</span><p>Closed out a batch of open items in one sitting — finished migrating the media library to TrueNAS, confirmed the <code>/uptime-status</code> slash command end-to-end, and traced a "slow" internet reading down to a single-threaded speed-test tool rather than a real network problem.</p></li>
+          <li><span class="meta-date">2026-07-24</span><p><b>Lesson:</b> a "this text should read as secondary/quiet" design choice still needs an actual contrast-ratio check — this site's old faint text tier looked fine and measured 2.43:1 in light mode, well under WCAG AA's 4.5:1 minimum.</p></li>
+          <li><span class="meta-date">2026-07-23</span><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push, widened Ansible to a second host over a dedicated SSH keypair, and shipped the first production service (PostgreSQL) with secrets in Ansible Vault, not plaintext. <b>Lessons:</b> NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot — a trap for any containerized app on network-backed storage; and Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code>, so pointing it at a host with the same name does nothing, silently.</p></li>
+          <li><span class="meta-date">2026-07-22</span><p>Brought Terraform into the lab against the Proxmox API, working through real least-privilege token/ACL design split across compute, storage, and networking permission domains. <b>Lesson:</b> Proxmox API tokens need their own explicit ACL grants across each domain — privilege separation means a token doesn't inherit its parent user's permissions.</p></li>
+          <li><span class="meta-date">2026-07-21</span><p>Closed out a batch of open items in one sitting — finished migrating the media library to TrueNAS, confirmed the <code>/uptime-status</code> slash command end-to-end, and traced a "slow" internet reading down to a single-threaded speed-test tool rather than a real network problem. <b>Lesson:</b> single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool (Ookla CLI, <code>iperf3 -P</code>) is the only reliable read on a fast link.</p></li>
           <li><span class="meta-date">2026-07-19</span><p>Wired this repo's docs to auto-mirror into an Obsidian vault on every commit via a git post-commit hook, and began connecting Claude Desktop's MCP access to that same vault.</p></li>
-          <li><span class="meta-date">2026-07-18</span><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude.</p></li>
+          <li><span class="meta-date">2026-07-18</span><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude. <b>Lesson:</b> for a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></li>
           <li><span class="meta-date">2026-07-17</span><p>Root-caused a network throughput bottleneck end-to-end — switch hardware, NIC negotiation, and a misleading single-threaded speed-test tool.</p></li>
           <li><span class="meta-date">2026-07-15</span><p>Extended storage to a mirrored ZFS pool, added a second SSD for VM storage, stood up a single-pane Homepage dashboard, and upgraded Uptime Kuma across a major version bump.</p></li>
           <li><span class="meta-date">2026-07-14</span><p>Stood up the lab's Proxmox foundation and first VMs, git-tracked as infrastructure-as-documentation from day one.</p></li>
-        </ul>
-      </div>
-      <div class="timeline-fade" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <section class="lessons">
-    <h2>Recently Learned <a class="h2-link" href="https://github.com/kyledupont/Homelab/blob/main/Docs/LessonsLearned.md" target="_blank" rel="noopener">full log ↗</a></h2>
-    <div class="timeline-wrap">
-      <div class="timeline-scroll">
-        <ul class="timeline">
-          <li><span class="meta-date">2026-07-28</span><p>A completed TCP handshake with no response afterward — especially only from non-loopback sources — points at the application silently filtering the request, not the network dropping it. Different failure class from "unreachable," different fix.</p></li>
-          <li><span class="meta-date">2026-07-24</span><p>A "this text should read as secondary/quiet" design choice still needs an actual contrast-ratio check — the old faint text tier looked fine and measured 2.43:1 in light mode, well under WCAG AA's 4.5:1 minimum.</p></li>
-          <li><span class="meta-date">2026-07-23</span><p>NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot — a trap for any containerized app on network-backed storage, not just Postgres.</p></li>
-          <li><span class="meta-date">2026-07-23</span><p>Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code> — pointing it at a host with the same name does nothing, silently.</p></li>
-          <li><span class="meta-date">2026-07-22</span><p>Proxmox API tokens need their own explicit ACL grants across compute, storage, and network domains — privilege separation means a token doesn't inherit its parent user's permissions.</p></li>
-          <li><span class="meta-date">2026-07-21</span><p>Single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool (Ookla CLI, iperf3 -P) is the only reliable read on a fast link.</p></li>
-          <li><span class="meta-date">2026-07-18</span><p>For a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></li>
         </ul>
       </div>
       <div class="timeline-fade" aria-hidden="true"></div>
@@ -439,6 +425,7 @@
   var listEl = document.getElementById('ticker-list');
   var statusEl = document.getElementById('ticker-status');
   var REFRESH_MS = 5 * 60 * 1000;
+  var commitMsgCache = {}; // sha -> first line of commit message, kept across refreshes
 
   function timeAgo(iso) {
     var diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -459,12 +446,19 @@
     var repo = ev.repo && ev.repo.name ? ev.repo.name : 'unknown repo';
     if (ev.type === 'PushEvent' && ev.payload) {
       // GitHub's public events API no longer includes payload.commits for
-      // unauthenticated requests, so fall back to ref/head instead of a
-      // commit message -- fetching the message separately would cost one
-      // extra API call per row against a 60-req/hour unauthenticated limit.
+      // unauthenticated requests. Show ref/head immediately; the real commit
+      // message (if any) is filled in afterward by fetchCommitMessage below,
+      // one lookup per row instead of blocking the initial render on it.
       var branch = (ev.payload.ref || '').replace('refs/heads/', '');
-      var sha = ev.payload.head ? ev.payload.head.slice(0, 7) : '';
-      return { repo: repo, msg: 'pushed to ' + (branch || 'a branch') + (sha ? ' (' + sha + ')' : '') };
+      var sha = ev.payload.head || '';
+      var short = sha ? sha.slice(0, 7) : '';
+      var cached = sha && commitMsgCache[sha];
+      return {
+        repo: repo,
+        msg: cached || ('pushed to ' + (branch || 'a branch') + (short ? ' (' + short + ')' : '')),
+        sha: sha,
+        needsCommitMsg: !!sha && !cached
+      };
     }
     if (ev.type === 'CreateEvent' && ev.payload) {
       return { repo: repo, msg: 'created ' + (ev.payload.ref_type || 'repository') + (ev.payload.ref ? ' ' + ev.payload.ref : '') };
@@ -478,13 +472,27 @@
     return null;
   }
 
+  function fetchCommitMessage(repo, sha) {
+    return fetch('https://api.github.com/repos/' + repo + '/commits/' + sha)
+      .then(function (r) { if (!r.ok) throw new Error('commit lookup failed'); return r.json(); })
+      .then(function (data) {
+        var msg = data.commit && data.commit.message ? data.commit.message.split('\n')[0] : null;
+        if (msg) commitMsgCache[sha] = msg;
+        return msg;
+      })
+      .catch(function () { return null; }); // best-effort -- fall back stays in place on failure/rate-limit
+  }
+
   function render(events) {
     var rows = [];
+    var pending = [];
     for (var i = 0; i < events.length && rows.length < 8; i++) {
       var d = describe(events[i]);
       if (!d) continue;
+      var rowIndex = rows.length;
+      if (d.needsCommitMsg) pending.push({ index: rowIndex, repo: d.repo, sha: d.sha });
       rows.push(
-        '<li><span class="ticker-when">' + timeAgo(events[i].created_at) + '</span>' +
+        '<li id="ticker-row-' + rowIndex + '"><span class="ticker-when">' + timeAgo(events[i].created_at) + '</span>' +
         '<span><span class="ticker-repo">' + escapeHtml(d.repo) + '</span><br>' +
         '<span class="ticker-msg">' + escapeHtml(d.msg) + '</span></span></li>'
       );
@@ -495,6 +503,16 @@
       listEl.innerHTML = rows.join('');
     }
     statusEl.innerHTML = '<span class="live-dot"></span>Live · updated ' + new Date().toLocaleTimeString();
+
+    // Fill in real commit messages in the background -- one request per
+    // visible push row, at most 8, so it never blocks the initial paint.
+    pending.forEach(function (p) {
+      fetchCommitMessage(p.repo, p.sha).then(function (msg) {
+        if (!msg) return;
+        var el = document.querySelector('#ticker-row-' + p.index + ' .ticker-msg');
+        if (el) el.textContent = msg; // textContent, not innerHTML -- already safe from the raw API string
+      });
+    });
   }
 
   function load() {
