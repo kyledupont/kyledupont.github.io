@@ -457,10 +457,14 @@
 
   function describe(ev) {
     var repo = ev.repo && ev.repo.name ? ev.repo.name : 'unknown repo';
-    if (ev.type === 'PushEvent' && ev.payload && ev.payload.commits && ev.payload.commits.length) {
-      var msg = ev.payload.commits[ev.payload.commits.length - 1].message.split('\n')[0];
-      var count = ev.payload.commits.length;
-      return { repo: repo, msg: (count > 1 ? count + ' commits — ' : '') + msg };
+    if (ev.type === 'PushEvent' && ev.payload) {
+      // GitHub's public events API no longer includes payload.commits for
+      // unauthenticated requests, so fall back to ref/head instead of a
+      // commit message -- fetching the message separately would cost one
+      // extra API call per row against a 60-req/hour unauthenticated limit.
+      var branch = (ev.payload.ref || '').replace('refs/heads/', '');
+      var sha = ev.payload.head ? ev.payload.head.slice(0, 7) : '';
+      return { repo: repo, msg: 'pushed to ' + (branch || 'a branch') + (sha ? ' (' + sha + ')' : '') };
     }
     if (ev.type === 'CreateEvent' && ev.payload) {
       return { repo: repo, msg: 'created ' + (ev.payload.ref_type || 'repository') + (ev.payload.ref ? ' ' + ev.payload.ref : '') };
