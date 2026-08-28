@@ -3,432 +3,530 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="Kyle Dupont — Senior Technical Solutions Engineer. 13+ years in identity & access management, endpoint management, and AI enablement, now building hands-on platform engineering depth in a self-hosted homelab.">
 <title>Kyle Dupont — Senior Technical Solutions Engineer</title>
-<script>
-  (function () {
-    try {
-      if (localStorage.getItem('theme') === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    } catch (e) {}
-  })();
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   html, body { margin: 0; }
 
-  /* dark is the default look; :root[data-theme="light"] overrides it */
-  /* palette: Amber Terminal — neutrals rebuilt for real AA contrast */
   :root {
-    --bg: #10161a; --panel: #1a2226; --panel-2: #151c20; --border: #2f3a41;
-    --text: #f0ece2; --text-dim: #aab4b9; --text-faint: #8b969c;
-    --hub: #fbbf24; --build: #2dd4bf; --alt: #a78bfa; --code-bg: #0c1114;
-  }
-  :root[data-theme="light"] {
-    --bg: #f3efe6; --panel: #fdfbf6; --panel-2: #eae4d6; --border: #ddd5c2;
-    --text: #201d17; --text-dim: #5c5346; --text-faint: #6f6656;
-    --hub: #b45309; --build: #0d9488; --alt: #7c3aed; --code-bg: #ece5d5;
+    --void: #08090a; --carbon: #0f1011; --obsidian: #161718;
+    --graphite: #23252a; --smoke: #383b3f;
+    --ash: #62666d; --fog: #8a8f98; --mist: #d0d6e0; --bone: #e5e5e6; --paper: #ffffff;
+    --lime: #e4f222; --lime-ink: #08090a;
+    --green: #27a644; --red: #eb5757; --teal: #02b8cc; --violet: #6366f1; --lavender: #8b5cf6;
+    --r-badge: 4px; --r-btn: 6px; --r-card: 14px; --r-panel: 16px; --r-pill: 9999px;
   }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', sans-serif;
-    line-height: 1.55;
-    padding: 3rem 1.5rem 5rem;
+    background: var(--void);
+    color: var(--bone);
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: 'cv01' 1, 'ss03' 1, 'zero' 1;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 16px;
+    overflow-x: hidden;
   }
-  .page { max-width: 920px; margin: 0 auto; }
+  ::selection { background: var(--lime); color: var(--lime-ink); }
+  img { max-width: 100%; }
 
-  h1, h2, h3 {
-    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, ui-serif, serif;
-    font-weight: 600;
-    text-wrap: balance;
-  }
-  code, .mono, .eyebrow, .tag, .pill-link, .meta-date {
-    font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
-  }
-  a { color: var(--hub); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-feature-settings: 'cv01' 1, 'ss03' 1; }
 
-  .eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--text-dim); display: block; margin-bottom: 0.9rem;
-  }
+  h1, h2, h3 { font-weight: 590; color: var(--paper); margin: 0; letter-spacing: -0.022em; text-wrap: balance; }
+  a { color: var(--mist); text-decoration: none; }
+  p { margin: 0; }
 
-  /* top link row */
-  .top-links { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2.4rem; }
-  .pill-link {
-    font-size: 0.76rem;
-    color: var(--text-faint);
-    text-decoration: none;
-    display: inline-block;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.3rem 0.8rem;
-  }
-  .pill-link:hover { color: var(--hub); border-color: var(--hub); }
-  .theme-toggle {
-    font: inherit;
-    cursor: pointer;
-    background: var(--panel);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-left: auto;
-  }
-  .theme-toggle:hover { color: var(--hub); border-color: var(--hub); }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: var(--fog); }
 
-  /* hero */
-  .hero {
-    display: flex;
-    gap: 1.8rem;
-    align-items: center;
-    margin-bottom: 3rem;
-    flex-wrap: wrap;
+  /* ---------------------------------------------------------------- nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(8,9,10,0.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background-color .3s ease;
   }
-  .hero-photo {
-    width: 132px; height: 132px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--panel);
-    outline: 1px solid var(--border);
-    flex: 0 0 auto;
-  }
-  .hero-text { flex: 1 1 380px; min-width: 260px; }
-  h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.15; margin: 0 0 0.5rem; }
-  .hero-title { font-size: 1.02rem; color: var(--hub); font-weight: 600; margin: 0 0 0.7rem; }
-  .hero-text p { color: var(--text-dim); max-width: 60ch; font-size: 1rem; margin: 0; }
+  header.nav.scrolled { border-color: var(--graphite); background: rgba(8,9,10,0.85); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 24px; max-width: 1120px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 590; color: var(--paper); font-size: 14px; }
+  .brand .mark { flex: none; display: inline-flex; }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-links a { font-size: 13px; color: var(--fog); padding: 8px 12px; border-radius: var(--r-btn); transition: color .15s ease, background-color .15s ease; }
+  .nav-links a:hover { color: var(--paper); background: rgba(255,255,255,0.05); }
+  .nav-cta { font-size: 13px; font-weight: 510; color: var(--lime-ink); background: var(--lime); padding: 8px 14px; border-radius: var(--r-btn); }
+  .nav-cta:hover { color: var(--lime-ink); opacity: .9; }
 
-  section { margin-bottom: 3rem; }
-  h2 {
-    font-size: 1.25rem;
-    margin: 0 0 1.1rem;
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-  h2 .h2-link {
-    font-family: ui-monospace, monospace;
-    font-size: 0.72rem;
-    color: var(--text-faint);
-    text-decoration: none;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.15rem 0.6rem;
-  }
-  h2 .h2-link:hover { color: var(--hub); border-color: var(--hub); }
+  /* ---------------------------------------------------------------- hero */
+  .hero { position: relative; padding: 88px 0 64px; overflow: hidden; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.35; z-index: 0; pointer-events: none; }
+  .orb-a { width: 480px; height: 480px; background: radial-gradient(circle, var(--lime), transparent 70%); top: -220px; left: 8%; animation: drift-a 26s ease-in-out infinite; }
+  .orb-b { width: 420px; height: 420px; background: radial-gradient(circle, var(--violet), transparent 70%); top: -160px; right: 4%; opacity: .28; animation: drift-b 32s ease-in-out infinite; }
+  @keyframes drift-a { 0%,100% { transform: translate(0,0); } 50% { transform: translate(40px, 30px); } }
+  @keyframes drift-b { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-30px, 40px); } }
+  @media (prefers-reduced-motion: reduce) { .orb-a, .orb-b { animation: none; } }
 
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.1rem 1.3rem;
-  }
+  .hero-inner { position: relative; z-index: 1; text-align: center; }
+  h1.headline { font-size: clamp(44px, 7vw, 84px); line-height: 0.98; margin: 0 auto 20px; max-width: 16ch; }
+  h1.headline .accent { background: linear-gradient(100deg, var(--lime), #f5ff8a 60%, var(--lime)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-lede { color: var(--fog); font-size: 19px; max-width: 54ch; margin: 0 auto 36px; }
+  .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 72px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; font-weight: 510; font-size: 14px; border-radius: var(--r-btn); padding: 11px 18px; border: 1px solid transparent; transition: border-color .15s ease, background-color .15s ease, opacity .15s ease, transform .15s ease; }
+  .btn-primary { background: var(--lime); color: var(--lime-ink); box-shadow: 0 0 0 1px rgba(228,242,34,0.4) inset, 0 8px 24px -8px rgba(228,242,34,0.5); }
+  .btn-primary:hover { transform: translateY(-1px); opacity: .92; }
+  .btn-ghost { background: rgba(255,255,255,0.03); box-shadow: 0 0 0 1px var(--graphite) inset; color: var(--mist); }
+  .btn-ghost:hover { box-shadow: 0 0 0 1px var(--smoke) inset; color: var(--paper); }
 
-  /* about */
-  .about p { color: var(--text-dim); max-width: 72ch; font-size: 1rem; margin: 0 0 0.9rem; }
-  .about p:last-child { margin-bottom: 0; }
+  /* ---- hero photo panel (the "product screenshot") ---- */
+  .panel {
+    background: var(--carbon); border-radius: var(--r-panel);
+    box-shadow: 0 0 0 1px var(--graphite) inset, 0 30px 80px -30px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+  .hero-panel { max-width: 400px; margin: 0 auto; text-align: left; }
+  .panel-chrome { display: flex; align-items: center; gap: 10px; padding: 12px 16px; box-shadow: 0 1px 0 var(--graphite); }
+  .chrome-dots { display: flex; gap: 6px; }
+  .chrome-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--graphite); }
+  .chrome-title { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fog); }
+  .hero-photo-wrap { position: relative; }
+  .hero-photo-wrap img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; filter: saturate(0.94) contrast(1.03); }
+  .hero-photo-overlay { position: absolute; left: 16px; bottom: 16px; right: 16px; }
+  .overlay-chip { background: rgba(8,9,10,0.72); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px var(--graphite) inset; border-radius: var(--r-btn); padding: 10px 14px; }
+  .overlay-chip .k { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--fog); text-transform: uppercase; letter-spacing: .04em; display: block; margin-bottom: 3px; }
+  .overlay-chip .v { font-size: 14px; font-weight: 590; color: var(--paper); }
 
-  /* skills */
-  .skill-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .skill-group {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-  }
-  .skill-group.homelab { border-color: var(--build); }
-  .skill-group h3 {
-    font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--text-faint); margin: 0 0 0.7rem; font-family: inherit;
-  }
-  .skill-group.homelab h3 { color: var(--build); }
-  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .chip {
-    font-size: 0.78rem;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.25rem 0.6rem;
-    color: var(--text);
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
 
-  /* experience */
-  .job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.2rem; }
-  .job-company { font-size: 1.1rem; font-weight: 600; color: var(--text); }
-  .job-dates { font-size: 0.78rem; color: var(--text-faint); white-space: nowrap; }
-  .job-roles { font-size: 0.85rem; color: var(--text-dim); margin: 0 0 1rem; }
-  .job-roles b { color: var(--text); font-weight: 600; }
-  .exp ul { margin: 0; padding-left: 1.15rem; color: var(--text-dim); font-size: 0.92rem; }
-  .exp li { margin: 0.35rem 0; }
-  .prior-roles {
-    margin-top: 1.4rem;
-    padding-top: 1.1rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    font-size: 0.85rem;
-    color: var(--text-faint);
-  }
-  .prior-roles b { color: var(--text-dim); font-weight: 600; }
+  /* ---------------------------------------------------------------- stats row */
+  .stats { padding: 72px 0; box-shadow: 0 1px 0 var(--graphite); }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .stat .num { font-size: 40px; font-weight: 590; color: var(--paper); letter-spacing: -0.02em; }
+  .stat .num .mono-unit { font-size: 22px; color: var(--fog); font-weight: 400; }
+  .stat .label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fog); text-transform: uppercase; letter-spacing: .04em; margin: 8px 0 10px; }
+  .stat .desc { font-size: 14px; color: var(--fog); max-width: 32ch; }
 
-  /* certifications */
-  .cert-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
-  .cert-chip {
-    font-size: 0.82rem;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.4rem 0.8rem;
-    color: var(--text);
-  }
-  .edu-line { font-size: 0.85rem; color: var(--text-faint); }
+  /* ---------------------------------------------------------------- feature sections */
+  .feature { padding: 96px 0; }
+  .feature-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: center; }
+  .feature.reverse .feature-grid { grid-template-columns: 1.15fr 0.85fr; }
+  .feature.reverse .feature-copy { order: 2; }
+  .feature.reverse .feature-visual { order: 1; }
+  .feature-copy .eyebrow { display: block; margin-bottom: 14px; }
+  .feature-copy h2 { font-size: 34px; margin-bottom: 16px; }
+  .feature-copy p { color: var(--fog); font-size: 16px; margin-bottom: 24px; max-width: 46ch; }
+  .feature-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .feature-copy .link-out { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--mist); font-family: 'JetBrains Mono', monospace; box-shadow: 0 0 0 1px var(--graphite) inset; border-radius: var(--r-pill); padding: 6px 12px; }
+  .feature-copy .link-out:hover { color: var(--paper); box-shadow: 0 0 0 1px var(--smoke) inset; }
 
-  /* timelines (homelab + lessons) */
-  .section-note { font-size: 0.82rem; color: var(--text-faint); margin: -0.5rem 0 1rem; }
-  .timeline-wrap { position: relative; }
-  .timeline-scroll {
-    max-height: 22rem;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  .timeline-scroll::-webkit-scrollbar { width: 7px; }
-  .timeline-scroll::-webkit-scrollbar-track { background: transparent; }
-  .timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
-  .timeline-scroll::-webkit-scrollbar-thumb:hover { background: var(--hub); }
-  .timeline-fade {
-    position: absolute; left: 0; right: 0.5rem; bottom: 0; height: 2.2rem;
-    background: linear-gradient(to bottom, transparent, var(--bg));
-    pointer-events: none;
-  }
-  .timeline { list-style: none; margin: 0; padding: 0; }
-  .timeline li {
-    display: grid;
-    grid-template-columns: 88px 1fr;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .timeline li:last-child { border-bottom: none; }
-  .meta-date { font-size: 0.74rem; color: var(--text-faint); padding-top: 0.15rem; white-space: nowrap; }
-  .timeline p { margin: 0; font-size: 0.9rem; color: var(--text-dim); }
-  .see-more { font-size: 0.82rem; margin-top: 0.9rem; }
+  /* skills board panel */
+  .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; padding: 18px; }
+  .board-col { background: rgba(255,255,255,0.02); box-shadow: 0 0 0 1px var(--graphite) inset; border-radius: var(--r-btn); padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .board-col-head { display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--fog); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 2px; }
+  .board-col-head .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .board-chips { display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; }
+  .board-card { background: var(--carbon); box-shadow: 0 0 0 1px var(--graphite) inset; border-radius: 5px; padding: 4px 8px; font-size: 11.5px; line-height: 1.3; color: var(--mist); max-width: 100%; }
 
-  /* live ticker */
-  .ticker-status { font-size: 0.76rem; color: var(--text-faint); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
-  .live-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--build);
-    display: inline-block;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  /* gantt panel */
+  .gantt { padding: 22px 20px 24px; }
+  .gantt-axis { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ash); margin-bottom: 14px; padding: 0 2px; }
+  .gantt-rows { display: flex; flex-direction: column; gap: 14px; }
+  .gantt-row { display: flex; flex-direction: column; gap: 5px; }
+  .gantt-row .row-label { font-size: 12px; color: var(--fog); font-family: 'JetBrains Mono', monospace; }
+  .gantt-row .row-label b { color: var(--bone); font-weight: 510; }
+  .gantt-track { position: relative; height: 20px; background: rgba(255,255,255,0.02); border-radius: 4px; }
+  .gantt-bar { position: absolute; top: 0; height: 100%; border-radius: 4px; }
+  .gantt-bar.muted { background: var(--graphite); }
+  .gantt-bar.tier1 { background: linear-gradient(90deg, #3a3f18, #5a6420); }
+  .gantt-bar.tier2 { background: linear-gradient(90deg, #5a6420, #8a9a2a); }
+  .gantt-bar.tier3 { background: linear-gradient(90deg, #a8bc2e, var(--lime)); box-shadow: 0 0 12px -2px rgba(228,242,34,.5); }
+  .gantt-bar.current::after { content: ''; position: absolute; right: -3px; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); transform: translateY(-50%); }
+
+  /* commit-card list (homelab) */
+  .commits { display: flex; flex-direction: column; gap: 1px; max-height: 480px; overflow-y: auto; padding: 6px; scrollbar-width: thin; scrollbar-color: var(--graphite) transparent; }
+  .commits::-webkit-scrollbar { width: 7px; }
+  .commits::-webkit-scrollbar-thumb { background: var(--graphite); border-radius: var(--r-pill); }
+  .commit { display: grid; grid-template-columns: 14px 90px 1fr; gap: 12px; padding: 13px 10px; border-radius: 8px; }
+  .commit:hover { background: rgba(255,255,255,0.025); }
+  .commit .stripe { width: 3px; border-radius: 3px; align-self: stretch; }
+  .commit.ship .stripe { background: var(--green); }
+  .commit.lesson .stripe { background: var(--lime); }
+  .commit .cdate { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--fog); padding-top: 2px; }
+  .commit .cbody p { font-size: 13.5px; color: var(--fog); line-height: 1.55; }
+  .commit .cbody code { background: rgba(255,255,255,0.06); border-radius: 4px; padding: 1px 5px; font-size: 0.9em; font-family: 'JetBrains Mono', monospace; color: var(--mist); }
+  .commit .cbody b.tag { display: inline-flex; font-family: 'JetBrains Mono', monospace; font-weight: 400; font-size: 10.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--lime-ink); background: var(--lime); border-radius: 4px; padding: 1px 6px; margin-right: 3px; }
+
+  /* ---------------------------------------------------------------- changelog */
+  .changelog { padding: 96px 0; box-shadow: 0 1px 0 var(--graphite); }
+  .changelog-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+  .changelog-head h2 { font-size: 32px; }
+  .ticker-status { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fog); display: flex; align-items: center; gap: 8px; }
   .ticker-list { list-style: none; margin: 0; padding: 0; }
-  .ticker-list li {
-    display: grid;
-    grid-template-columns: 108px 1fr;
-    gap: 1rem;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.88rem;
-  }
-  .ticker-list li:last-child { border-bottom: none; }
-  .ticker-when { font-size: 0.74rem; color: var(--text-faint); padding-top: 0.1rem; }
-  .ticker-repo { color: var(--hub); font-family: ui-monospace, monospace; font-size: 0.78rem; }
-  .ticker-msg { color: var(--text-dim); }
-  .ticker-empty { font-size: 0.88rem; color: var(--text-faint); font-style: italic; }
+  .ticker-list li { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 14px 0; box-shadow: 0 1px 0 var(--graphite); font-size: 14px; }
+  .ticker-list li:last-child { box-shadow: none; }
+  .ticker-when { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--fog); padding-top: 2px; }
+  .ticker-repo { color: var(--paper); font-weight: 510; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .ticker-msg { color: var(--fog); }
+  .ticker-empty { font-size: 14px; color: var(--fog); font-style: italic; }
 
-  footer {
-    margin-top: 3rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.78rem;
-    color: var(--text-faint);
-  }
-  footer a { color: var(--text-faint); }
-  footer a:hover { color: var(--hub); }
+  /* ---------------------------------------------------------------- credentials strip */
+  .credentials { padding: 96px 0; box-shadow: 0 1px 0 var(--graphite); }
+  .credentials .eyebrow { display: block; margin-bottom: 14px; }
+  .credentials h2 { font-size: 32px; margin-bottom: 28px; }
+  .cred-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .cred-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; background: var(--carbon); box-shadow: 0 0 0 1px var(--graphite) inset; border-radius: var(--r-btn); padding: 9px 15px; color: var(--bone); font-weight: 510; }
+  .cred-chip svg { flex: none; color: var(--fog); }
+  .edu-line { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--fog); }
+  .edu-line svg { flex: none; color: var(--fog); }
 
-  @media (max-width: 640px) {
-    .skill-groups { grid-template-columns: 1fr; }
-    .timeline li, .ticker-list li { grid-template-columns: 1fr; gap: 0.15rem; }
-    .hero { flex-direction: column; align-items: flex-start; text-align: left; }
+  /* ---------------------------------------------------------------- footer */
+  footer { box-shadow: 0 1px 0 var(--graphite); padding: 56px 0 48px; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+  .footer-brand .brand { margin-bottom: 12px; }
+  .footer-brand p { color: var(--fog); font-size: 14px; max-width: 32ch; }
+  .footer-col h4 { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--fog); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 14px; font-weight: 400; }
+  .footer-col a { display: block; font-size: 14px; color: var(--mist); margin-bottom: 10px; }
+  .footer-col a:hover { color: var(--paper); }
+  .footer-bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--fog); box-shadow: 0 -1px 0 var(--graphite); padding-top: 24px; }
+
+  /* ---------------------------------------------------------------- reveal-on-scroll */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 860px) {
+    .feature-grid, .feature.reverse .feature-grid { grid-template-columns: 1fr; }
+    .feature.reverse .feature-copy, .feature.reverse .feature-visual { order: initial; }
+    .stats-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+  @media (max-width: 620px) {
+    .nav-links { display: none; }
+    .ticker-list li { grid-template-columns: 1fr; gap: 2px; }
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="top-links">
-    <a class="pill-link" href="https://www.linkedin.com/in/kyle-dupont" target="_blank" rel="noopener">LinkedIn ↗</a>
-    <a class="pill-link" href="https://github.com/kyledupont" target="_blank" rel="noopener">GitHub ↗</a>
-    <a class="pill-link" href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">Homelab system map ↗</a>
-    <button class="pill-link theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode">☀️ Light</button>
+<header class="nav" id="siteNav">
+  <div class="nav-inner">
+    <div class="brand"><svg class="mark" width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 6.6L5.4 16.2M12 6.6l6.6 9.6M6.2 16.6h11.6" stroke="#e4f222" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="4.6" r="2.1" fill="#e4f222"/><circle cx="4.4" cy="17.2" r="2.1" fill="#e4f222"/><circle cx="19.6" cy="17.2" r="2.1" fill="#e4f222"/></svg>Kyle Dupont</div>
+    <nav class="nav-links">
+      <a href="#work">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#credentials">Credentials</a>
+      <a href="#homelab">Homelab</a>
+    </nav>
+    <a class="nav-cta" href="mailto:dupontke@gmail.com">Get in touch</a>
   </div>
+</header>
 
-  <div class="hero">
-    <img class="hero-photo" src="assets/kyle-dupont.jpg" alt="Portrait of Kyle Dupont">
-    <div class="hero-text">
-      <span class="eyebrow">AI Enablement · Platform Engineering · IAM</span>
-      <h1>Kyle Dupont</h1>
-      <p class="hero-title">Senior Technical Solutions Engineer</p>
-      <p>13+ years running identity, endpoint, and SaaS platforms at enterprise scale — paired with a self-hosted infrastructure lab covering Kubernetes, Terraform, Ansible, and AI/automation tooling, documented in the open.</p>
+<section class="hero">
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <h1 class="headline">Identity, endpoint &amp; platform engineering — <span class="accent">built for scale.</span></h1>
+    <p class="hero-lede">Kyle Dupont, Senior Technical Solutions Engineer. 13+ years running identity, endpoint, and SaaS platforms at enterprise scale — paired with a self-hosted infrastructure lab covering Kubernetes, Terraform, Ansible, and AI/automation tooling, documented in the open.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="mailto:dupontke@gmail.com">Get in touch</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/kyle-dupont" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn btn-ghost" href="https://github.com/kyledupont" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+
+    <div class="panel hero-panel reveal">
+      <div class="panel-chrome">
+        <div class="chrome-dots"><span></span><span></span><span></span></div>
+        <span class="chrome-title mono">kyle@homelab</span>
+      </div>
+      <div class="hero-photo-wrap">
+        <img src="assets/kyle-dupont.jpg" alt="Portrait of Kyle Dupont">
+        <div class="hero-photo-overlay">
+          <div class="overlay-chip">
+            <span class="k">Current role</span>
+            <span class="v">Sr. Technical Solutions Engineer, PGA TOUR</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <section class="about">
-    <h2>About</h2>
-    <p>I'm a Senior Technical Solutions Engineer at PGA TOUR, where I've spent 13+ years supporting 2,000+ employees across identity, endpoint, and SaaS platforms — administering roughly 3,000 managed endpoints, running enterprise identity lifecycle (SSO, SAML, SCIM, OIDC, Okta, OneLogin), and leading platform migrations at scale.</p>
-    <p>Alongside that, I run a self-hosted infrastructure lab as hands-on depth to complement the AI enablement work I lead day to day — Proxmox virtualization, Terraform and Ansible for infrastructure-as-code, a Kubernetes cluster, CI/CD via GitHub Actions, and a growing set of AI/MCP tooling. It's documented in the open below, including a running build log and technical write-ups behind every major decision.</p>
-  </section>
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat reveal">
+      <div class="num">13<span class="mono-unit">+ yrs</span></div>
+      <div class="label">Enterprise Tenure</div>
+      <div class="desc">One company, three escalating roles — from helpdesk technician to senior escalation engineer.</div>
+    </div>
+    <div class="stat reveal">
+      <div class="num">~3,000</div>
+      <div class="label">Endpoints Managed</div>
+      <div class="desc">Across Intune, Jamf Pro, IRU MDM, and NinjaOne — for 2,000+ employees on Windows, macOS, and cloud.</div>
+    </div>
+    <div class="stat reveal">
+      <div class="num">2,000<span class="mono-unit">+</span></div>
+      <div class="label">Employees Supported</div>
+      <div class="desc">Senior escalation resource across Windows, macOS, cloud, SaaS, collaboration, and identity platforms.</div>
+    </div>
+  </div>
+</section>
 
-  <section class="skills">
-    <h2>Skills</h2>
-    <div class="skill-groups">
-      <div class="skill-group">
-        <h3>Identity &amp; Access</h3>
-        <div class="chips">
-          <span class="chip">Active Directory</span><span class="chip">Entra</span><span class="chip">Okta</span><span class="chip">OneLogin</span><span class="chip">SSO</span><span class="chip">SAML</span><span class="chip">OAuth</span><span class="chip">SCIM</span><span class="chip">OIDC</span><span class="chip">MFA</span><span class="chip">User Lifecycle Mgmt</span>
-        </div>
+<section class="feature" id="skills">
+  <div class="wrap feature-grid">
+    <div class="feature-copy reveal">
+      <span class="eyebrow">CAPABILITIES</span>
+      <h2>Five domains, one operator.</h2>
+      <p>Identity and endpoint management pay the bills; platform engineering is what I've been building nights and weekends to go deeper — Kubernetes, infrastructure-as-code, and AI/MCP tooling, all stood up and documented from scratch.</p>
+      <a class="link-out" href="#work">See it applied at PGA TOUR →</a>
+    </div>
+    <div class="feature-visual panel reveal">
+      <div class="panel-chrome">
+        <div class="chrome-dots"><span></span><span></span><span></span></div>
+        <span class="chrome-title mono">capability-board</span>
       </div>
-      <div class="skill-group">
-        <h3>Endpoint Management</h3>
-        <div class="chips">
-          <span class="chip">Microsoft Intune</span><span class="chip">Jamf Pro</span><span class="chip">IRU MDM</span><span class="chip">NinjaOne RMM</span><span class="chip">Windows</span><span class="chip">macOS</span><span class="chip">Endpoint Security</span>
+      <div class="board">
+        <div class="board-col">
+          <div class="board-col-head"><span class="dot" style="background:var(--violet)"></span>Identity &amp; Access</div>
+          <div class="board-chips">
+            <div class="board-card">Active Directory</div>
+            <div class="board-card">Entra</div>
+            <div class="board-card">Okta</div>
+            <div class="board-card">OneLogin</div>
+            <div class="board-card">SSO</div>
+            <div class="board-card">SAML</div>
+            <div class="board-card">OAuth</div>
+            <div class="board-card">SCIM</div>
+            <div class="board-card">OIDC</div>
+            <div class="board-card">MFA</div>
+            <div class="board-card">User Lifecycle Mgmt</div>
+          </div>
         </div>
-      </div>
-      <div class="skill-group">
-        <h3>Enterprise SaaS &amp; Collaboration</h3>
-        <div class="chips">
-          <span class="chip">Slack Enterprise</span><span class="chip">Microsoft Teams</span><span class="chip">Zendesk Enterprise</span><span class="chip">GitHub Enterprise</span><span class="chip">Jira</span><span class="chip">Qualtrics</span><span class="chip">SaaS Governance</span><span class="chip">Software Licensing</span>
+        <div class="board-col">
+          <div class="board-col-head"><span class="dot" style="background:var(--teal)"></span>Endpoint Mgmt</div>
+          <div class="board-chips">
+            <div class="board-card">Microsoft Intune</div>
+            <div class="board-card">Jamf Pro</div>
+            <div class="board-card">IRU MDM</div>
+            <div class="board-card">NinjaOne RMM</div>
+            <div class="board-card">Windows</div>
+            <div class="board-card">macOS</div>
+            <div class="board-card">Endpoint Security</div>
+          </div>
         </div>
-      </div>
-      <div class="skill-group">
-        <h3>AI Platforms &amp; Automation</h3>
-        <div class="chips">
-          <span class="chip">Microsoft Copilot</span><span class="chip">GitHub Copilot</span><span class="chip">ChatGPT</span><span class="chip">Claude</span><span class="chip">Cursor</span><span class="chip">PowerShell</span><span class="chip">Python</span><span class="chip">Power Automate</span><span class="chip">API Integrations</span>
+        <div class="board-col">
+          <div class="board-col-head"><span class="dot" style="background:var(--red)"></span>SaaS &amp; Collab</div>
+          <div class="board-chips">
+            <div class="board-card">Slack Enterprise</div>
+            <div class="board-card">Microsoft Teams</div>
+            <div class="board-card">Zendesk Enterprise</div>
+            <div class="board-card">GitHub Enterprise</div>
+            <div class="board-card">Jira</div>
+            <div class="board-card">Qualtrics</div>
+            <div class="board-card">SaaS Governance</div>
+            <div class="board-card">Software Licensing</div>
+          </div>
         </div>
-      </div>
-      <div class="skill-group homelab" style="grid-column: 1 / -1;">
-        <h3>Platform Engineering — built hands-on in the homelab below</h3>
-        <div class="chips">
-          <span class="chip">Docker</span><span class="chip">Kubernetes (K3s)</span><span class="chip">Terraform</span><span class="chip">Ansible</span><span class="chip">GitHub Actions</span><span class="chip">n8n</span><span class="chip">Model Context Protocol (MCP)</span><span class="chip">Claude Agent SDK</span>
+        <div class="board-col">
+          <div class="board-col-head"><span class="dot" style="background:var(--lavender)"></span>AI &amp; Automation</div>
+          <div class="board-chips">
+            <div class="board-card">Microsoft Copilot</div>
+            <div class="board-card">GitHub Copilot</div>
+            <div class="board-card">ChatGPT</div>
+            <div class="board-card">Claude</div>
+            <div class="board-card">Cursor</div>
+            <div class="board-card">PowerShell</div>
+            <div class="board-card">Python</div>
+            <div class="board-card">Power Automate</div>
+            <div class="board-card">API Integrations</div>
+          </div>
+        </div>
+        <div class="board-col">
+          <div class="board-col-head"><span class="dot" style="background:var(--green)"></span>Platform Eng.</div>
+          <div class="board-chips">
+            <div class="board-card">AWS</div>
+            <div class="board-card">Docker</div>
+            <div class="board-card">Kubernetes (K3s)</div>
+            <div class="board-card">Terraform</div>
+            <div class="board-card">Ansible</div>
+            <div class="board-card">GitHub Actions</div>
+            <div class="board-card">n8n</div>
+            <div class="board-card">Model Context Protocol (MCP)</div>
+            <div class="board-card">Claude Agent SDK</div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="exp">
-    <h2>Experience</h2>
-    <div class="card">
-      <div class="job-head">
-        <span class="job-company">PGA TOUR</span>
-        <span class="job-dates">June 2013 – Present</span>
+<section class="feature reverse" id="work">
+  <div class="wrap feature-grid">
+    <div class="feature-copy reveal">
+      <span class="eyebrow">EXPERIENCE</span>
+      <h2>13 years, three roles, one employer.</h2>
+      <p>Senior escalation resource for 2,000+ employees at PGA TOUR — promoted twice, from Global Helpdesk Technician roots into identity and endpoint ownership at enterprise scale. Led three major platform migrations and supervised a team of eight.</p>
+      <a class="link-out" href="#homelab">See the self-taught side ↓</a>
+    </div>
+    <div class="feature-visual panel reveal">
+      <div class="panel-chrome">
+        <div class="chrome-dots"><span></span><span></span><span></span></div>
+        <span class="chrome-title mono">career-timeline</span>
       </div>
-      <p class="job-roles"><b>Sr. Technical Solutions Engineer</b> (Feb 2025–Present) · Technical Solutions Engineer (Mar 2020–Feb 2025) · Senior Technical Analyst (Jun 2013–Mar 2020)</p>
-      <ul>
-        <li>Senior escalation resource supporting 2,000+ employees across Windows, macOS, cloud, SaaS, collaboration, and identity platforms.</li>
-        <li>Administer ~3,000 managed endpoints (Microsoft Intune, Jamf Pro, IRU MDM, NinjaOne) and own identity lifecycle end-to-end — onboarding, offboarding, SSO, MFA, SCIM, OIDC, OneLogin, Okta.</li>
-        <li>Administer Microsoft Copilot and GitHub Copilot — licensing, governance, and adoption across the organization.</li>
-        <li>Led three enterprise initiatives: migrated a 20+ year legacy ticketing system to a modern cloud platform; migrated 500+ managed devices from Jamf Pro to IRU MDM; modernized endpoint deployment off Microsoft Deployment Toolkit.</li>
-        <li>Supervised a team of 8 technicians and directly managed a team of 4.</li>
-      </ul>
-      <div class="prior-roles">
-        <span><b>Enterprise Integration</b> — On-Site Technician II / Service Desk Technician, 2012–2013</span>
-        <span><b>Dow Corning</b> — Global Helpdesk Technician, 2010–2012</span>
+      <div class="gantt">
+        <div class="gantt-axis"><span>2010</span><span>2013</span><span>2016</span><span>2019</span><span>2022</span><span>2026</span></div>
+        <div class="gantt-rows">
+          <div class="gantt-row">
+            <span class="row-label">Dow Corning — <b>Global Helpdesk Technician</b></span>
+            <div class="gantt-track"><div class="gantt-bar muted" style="left:0%; width:11.8%"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span class="row-label">Enterprise Integration — <b>Service Desk Technician</b></span>
+            <div class="gantt-track"><div class="gantt-bar muted" style="left:11.8%; width:5.9%"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span class="row-label">PGA TOUR — <b>Senior Technical Analyst</b></span>
+            <div class="gantt-track"><div class="gantt-bar tier1" style="left:20.1%; width:39.7%"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span class="row-label">PGA TOUR — <b>Technical Solutions Engineer</b></span>
+            <div class="gantt-track"><div class="gantt-bar tier2" style="left:59.8%; width:28.9%"></div></div>
+          </div>
+          <div class="gantt-row">
+            <span class="row-label">PGA TOUR — <b>Sr. Technical Solutions Engineer</b></span>
+            <div class="gantt-track"><div class="gantt-bar tier3 current" style="left:88.7%; width:8.8%"></div></div>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="certs">
-    <h2>Certifications &amp; Education</h2>
-    <div class="cert-row">
-      <span class="cert-chip">Okta Certified Professional</span>
-      <span class="cert-chip">AWS Certified Solutions Architect – Associate</span>
-      <span class="cert-chip">CompTIA Security+</span>
-      <span class="cert-chip">ITIL Foundation</span>
-      <span class="cert-chip">Network+</span>
-      <span class="cert-chip">A+</span>
+<section class="credentials" id="credentials">
+  <div class="wrap reveal">
+    <span class="eyebrow">CREDENTIALS</span>
+    <h2>Certifications &amp; education</h2>
+    <div class="cred-row">
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.5l6 2.3v4.7c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.8L10 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="10" cy="9.2" r="1.6" stroke="currentColor" stroke-width="1.2"/><path d="M10 10.8v2.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Okta Certified Professional</span>
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 14.5a3.5 3.5 0 01-.6-6.95A4.5 4.5 0 0114 6.2 3.8 3.8 0 0116.5 13v.1a1.4 1.4 0 01-.1 1.4H6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>AWS Certified Solutions Architect – Associate</span>
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.5l6 2.3v4.7c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.8L10 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 7.5v5M7.5 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>CompTIA Security+</span>
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.5l6 2.3v4.7c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.8L10 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 7.5v5M7.5 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>CompTIA Network+</span>
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.5l6 2.3v4.7c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V4.8L10 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 7.5v5M7.5 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>CompTIA A+</span>
+      <span class="cred-chip"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 7a5.5 5.5 0 10.9 4.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M16.8 4.3v3.2H13.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>ITIL Foundation</span>
     </div>
-    <div class="edu-line">Davenport University — BAS, Network Security, Cum Laude</div>
-  </section>
+    <div class="edu-line"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3l9 4.5-9 4.5-9-4.5L10 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M5.5 9.3v3.6c0 1.3 2 2.4 4.5 2.4s4.5-1.1 4.5-2.4V9.3" stroke="currentColor" stroke-width="1.3"/></svg>Davenport University — BAS, Network Security, Cum Laude</div>
+  </div>
+</section>
 
-  <section class="homelab-updates">
-    <h2>Homelab Log
-      <a class="h2-link" href="https://github.com/kyledupont/Homelab" target="_blank" rel="noopener">build log ↗</a>
-      <a class="h2-link" href="https://github.com/kyledupont/Homelab/blob/main/Docs/LessonsLearned.md" target="_blank" rel="noopener">lessons learned ↗</a>
-    </h2>
-    <p class="section-note">What got built, and what it taught along the way — scroll for more, not the starting point.</p>
-    <div class="timeline-wrap">
-      <div class="timeline-scroll">
-        <ul class="timeline">
-          <li><span class="meta-date">2026-08-25</span><p>Deployed a Grafana + Prometheus + Node Exporter monitoring stack, Ansible-managed with the admin password in Ansible Vault and Prometheus auto-provisioned as Grafana's datasource via file-based config — no manual UI setup on first login. <b>Lesson:</b> <code>docker compose up -d</code> only recreates a container when the compose file's own declared config changes (image, env, mount mappings) — it can't see edits to the contents of a file already inside a bind mount, so a config-only change (new dashboard bookmarks) silently kept serving stale data through a "successful" CI deploy until a manual restart.</p></li>
-          <li><span class="meta-date">2026-07-28</span><p>Ran a real SQL deep dive against the lab's own Postgres instance — designed a multi-table homelab-inventory schema (hosts, services, ports, dependencies), proved indexing's impact with <code>EXPLAIN ANALYZE</code> on a synthetic 2-million-row table (46.9ms → 2.96ms, ~16x), and demonstrated row-level locking across two genuinely concurrent sessions with wall-clock timestamps. <b>Lesson:</b> wrapping an indexed column in a function (<code>col::date = ...</code>) silently defeats the index even though it still exists — the same ~16x gap showed up again just from rewriting the query as a sargable range instead.</p></li>
-          <li><span class="meta-date">2026-07-28</span><p>Deployed Pi-hole for network-wide DNS and ad blocking, diagnosing a subtle failure along the way where DNS queries reached the container fine but got silently ignored — root-caused to Pi-hole's own listening-mode config rather than a firewall, then confirmed real ads actually getting blocked end-to-end. <b>Lesson:</b> a completed TCP handshake with no response — especially from non-loopback sources only — points at the application silently filtering, not the network dropping it; a different failure class from "unreachable," with a different fix.</p></li>
-          <li><span class="meta-date">2026-07-26</span><p>Formalized a network isolation boundary — the media server VM is deliberately kept separate from the automation/control-plane host, so it can eventually be exposed to the internet without widening the blast radius of the machine holding SSH keys and CI credentials.</p></li>
-          <li><span class="meta-date">2026-07-24</span><p>Stood up a single-node K3s Kubernetes cluster (Terraform-provisioned, Ansible-bootstrapped), deployed and load-tested a real workload, then published the companion <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">system map</a> live on GitHub Pages.</p></li>
-          <li><span class="meta-date">2026-07-24</span><p><b>Lesson:</b> a "this text should read as secondary/quiet" design choice still needs an actual contrast-ratio check — this site's old faint text tier looked fine and measured 2.43:1 in light mode, well under WCAG AA's 4.5:1 minimum.</p></li>
-          <li><span class="meta-date">2026-07-23</span><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push, widened Ansible to a second host over a dedicated SSH keypair, and shipped the first production service (PostgreSQL) with secrets in Ansible Vault, not plaintext. <b>Lessons:</b> NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot — a trap for any containerized app on network-backed storage; and Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code>, so pointing it at a host with the same name does nothing, silently.</p></li>
-          <li><span class="meta-date">2026-07-22</span><p>Brought Terraform into the lab against the Proxmox API, working through real least-privilege token/ACL design split across compute, storage, and networking permission domains. <b>Lesson:</b> Proxmox API tokens need their own explicit ACL grants across each domain — privilege separation means a token doesn't inherit its parent user's permissions.</p></li>
-          <li><span class="meta-date">2026-07-21</span><p>Closed out a batch of open items in one sitting — finished migrating the media library to TrueNAS, confirmed the <code>/uptime-status</code> slash command end-to-end, and traced a "slow" internet reading down to a single-threaded speed-test tool rather than a real network problem. <b>Lesson:</b> single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool (Ookla CLI, <code>iperf3 -P</code>) is the only reliable read on a fast link.</p></li>
-          <li><span class="meta-date">2026-07-19</span><p>Wired this repo's docs to auto-mirror into an Obsidian vault on every commit via a git post-commit hook, and began connecting Claude Desktop's MCP access to that same vault.</p></li>
-          <li><span class="meta-date">2026-07-18</span><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude. <b>Lesson:</b> for a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></li>
-          <li><span class="meta-date">2026-07-17</span><p>Root-caused a network throughput bottleneck end-to-end — switch hardware, NIC negotiation, and a misleading single-threaded speed-test tool.</p></li>
-          <li><span class="meta-date">2026-07-15</span><p>Extended storage to a mirrored ZFS pool, added a second SSD for VM storage, stood up a single-pane Homepage dashboard, and upgraded Uptime Kuma across a major version bump.</p></li>
-          <li><span class="meta-date">2026-07-14</span><p>Stood up the lab's Proxmox foundation and first VMs, git-tracked as infrastructure-as-documentation from day one.</p></li>
-        </ul>
+<section class="feature" id="homelab">
+  <div class="wrap feature-grid">
+    <div class="feature-copy reveal">
+      <span class="eyebrow">HOMELAB LOG</span>
+      <h2>Depth I built myself, in the open.</h2>
+      <p>Proxmox, Terraform, Ansible, Kubernetes, CI/CD, and a growing set of AI/MCP tooling — every entry below is a real deploy or a real lesson, timestamped as it happened, not a highlight reel.</p>
+      <div class="feature-links">
+        <a class="link-out" href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">View the live system map ↗</a>
+        <a class="link-out" href="https://github.com/kyledupont/Homelab" target="_blank" rel="noopener">Full build log on GitHub ↗</a>
       </div>
-      <div class="timeline-fade" aria-hidden="true"></div>
     </div>
-  </section>
+    <div class="feature-visual panel reveal">
+      <div class="panel-chrome">
+        <div class="chrome-dots"><span></span><span></span><span></span></div>
+        <span class="chrome-title mono">homelab · build log</span>
+      </div>
+      <div class="commits">
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-08-25</span><div class="cbody"><p>Deployed a Grafana + Prometheus + Node Exporter monitoring stack, Ansible-managed with the admin password in Ansible Vault and Prometheus auto-provisioned as Grafana's datasource via file-based config — no manual UI setup on first login. <b class="tag">Lesson</b> <code>docker compose up -d</code> only recreates a container when the compose file's own declared config changes — it can't see edits to the contents of a file already inside a bind mount, so a config-only change silently kept serving stale data through a "successful" CI deploy until a manual restart.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-28</span><div class="cbody"><p>Ran a real SQL deep dive against the lab's own Postgres instance — designed a multi-table homelab-inventory schema, proved indexing's impact with <code>EXPLAIN ANALYZE</code> on a synthetic 2-million-row table (46.9ms → 2.96ms, ~16x), and demonstrated row-level locking across two genuinely concurrent sessions. <b class="tag">Lesson</b> wrapping an indexed column in a function (<code>col::date = ...</code>) silently defeats the index — the same ~16x gap showed up again just from rewriting the query as a sargable range.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-28</span><div class="cbody"><p>Deployed Pi-hole for network-wide DNS and ad blocking, diagnosing a subtle failure where DNS queries reached the container fine but got silently ignored — root-caused to Pi-hole's own listening-mode config, not a firewall. <b class="tag">Lesson</b> a completed TCP handshake with no response points at the application silently filtering, not the network dropping it — a different failure class from "unreachable," with a different fix.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-26</span><div class="cbody"><p>Formalized a network isolation boundary — the media server VM is deliberately kept separate from the automation/control-plane host, so it can eventually be exposed to the internet without widening the blast radius of the machine holding SSH keys and CI credentials.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-24</span><div class="cbody"><p>Stood up a single-node K3s Kubernetes cluster (Terraform-provisioned, Ansible-bootstrapped), deployed and load-tested a real workload, then published the companion <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">system map</a> live on GitHub Pages.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-24</span><div class="cbody"><p><b class="tag">Lesson</b> a "this text should read as secondary/quiet" design choice still needs an actual contrast-ratio check — this site's old faint text tier looked fine and measured 2.43:1 in light mode, well under WCAG AA's 4.5:1 minimum.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-23</span><div class="cbody"><p>Wired a self-hosted GitHub Actions runner to auto-deploy Ansible playbooks on every push, widened Ansible to a second host, and shipped the first production service (PostgreSQL) with secrets in Ansible Vault. <b class="tag">Lessons</b> NFS root-squash silently breaks containers that <code>chown</code> their own data directory on first boot; and Ansible's <code>group_vars/&lt;name&gt;/</code> only loads for a group literally named <code>&lt;name&gt;</code>.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-22</span><div class="cbody"><p>Brought Terraform into the lab against the Proxmox API, working through real least-privilege token/ACL design split across compute, storage, and networking permission domains. <b class="tag">Lesson</b> Proxmox API tokens need their own explicit ACL grants across each domain — privilege separation means a token doesn't inherit its parent user's permissions.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-21</span><div class="cbody"><p>Closed out a batch of open items in one sitting — finished migrating the media library to TrueNAS, confirmed the <code>/uptime-status</code> slash command end-to-end, and traced a "slow" internet reading down to a single-threaded speed-test tool. <b class="tag">Lesson</b> single-connection speed tests badly understate real throughput above ~1 Gbps; a multi-stream tool is the only reliable read on a fast link.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-19</span><div class="cbody"><p>Wired this repo's docs to auto-mirror into an Obsidian vault on every commit via a git post-commit hook, and began connecting Claude Desktop's MCP access to that same vault.</p></div></div>
+        <div class="commit lesson"><span class="stripe"></span><span class="cdate mono">2026-07-18</span><div class="cbody"><p>Built a custom Model Context Protocol (MCP) server and a full n8n automation workflow (job/learning/news digest), orchestrated with Claude. <b class="tag">Lesson</b> for a fast-moving SDK, trust the package registry's "latest" tag over a repo's default branch — the two can drift apart.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-17</span><div class="cbody"><p>Root-caused a network throughput bottleneck end-to-end — switch hardware, NIC negotiation, and a misleading single-threaded speed-test tool.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-15</span><div class="cbody"><p>Extended storage to a mirrored ZFS pool, added a second SSD for VM storage, stood up a single-pane Homepage dashboard, and upgraded Uptime Kuma across a major version bump.</p></div></div>
+        <div class="commit ship"><span class="stripe"></span><span class="cdate mono">2026-07-14</span><div class="cbody"><p>Stood up the lab's Proxmox foundation and first VMs, git-tracked as infrastructure-as-documentation from day one.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section class="live-activity">
-    <h2>Live from GitHub</h2>
-    <div class="ticker-status" id="ticker-status"><span class="live-dot"></span>Loading recent activity…</div>
-    <ul class="ticker-list" id="ticker-list"></ul>
-  </section>
+<section class="changelog" id="changelog">
+  <div class="wrap">
+    <div class="changelog-head reveal">
+      <h2>Live from GitHub</h2>
+      <div class="ticker-status" id="ticker-status"><span class="live-dot"></span>Loading recent activity…</div>
+    </div>
+    <ul class="ticker-list reveal" id="ticker-list"></ul>
+  </div>
+</section>
 
-  <footer>
-    Built by Kyle Dupont · <a href="https://github.com/kyledupont" target="_blank" rel="noopener">github.com/kyledupont</a> · <a href="https://www.linkedin.com/in/kyle-dupont" target="_blank" rel="noopener">LinkedIn</a> · <a href="mailto:dupontke@gmail.com">dupontke@gmail.com</a>
-  </footer>
-
-</div>
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand"><svg class="mark" width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 6.6L5.4 16.2M12 6.6l6.6 9.6M6.2 16.6h11.6" stroke="#e4f222" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="4.6" r="2.1" fill="#e4f222"/><circle cx="4.4" cy="17.2" r="2.1" fill="#e4f222"/><circle cx="19.6" cy="17.2" r="2.1" fill="#e4f222"/></svg>Kyle Dupont</div>
+        <p>Senior Technical Solutions Engineer at PGA TOUR. Identity, endpoint, and platform engineering, documented in the open.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <a href="#work">Experience</a>
+        <a href="#skills">Skills</a>
+        <a href="#credentials">Credentials</a>
+        <a href="#homelab">Homelab</a>
+        <a href="#changelog">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/kyledupont" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/kyle-dupont" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://kyledupont.github.io/Homelab/" target="_blank" rel="noopener">System map</a>
+        <a href="mailto:dupontke@gmail.com">Email</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Kyle Dupont</span>
+      <span>Built and deployed from the homelab above.</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-(function () {
-  var root = document.documentElement;
-  var btn = document.getElementById('theme-toggle');
-  function isLight() { return root.getAttribute('data-theme') === 'light'; }
-  function sync() {
-    var light = isLight();
-    btn.textContent = light ? '🌙 Dark' : '☀️ Light';
-    btn.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
-    var meta = document.querySelector('meta[name="color-scheme"]');
-    if (meta) meta.setAttribute('content', light ? 'light' : 'dark');
-  }
-  sync();
-  btn.addEventListener('click', function () {
-    if (isLight()) {
-      root.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      root.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    }
-    sync();
-  });
-})();
+  // sticky nav border/background on scroll
+  (function () {
+    var nav = document.getElementById('siteNav');
+    function onScroll() { nav.classList.toggle('scrolled', window.scrollY > 8); }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
+  // scroll-triggered reveal
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in-view'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (e) { io.observe(e); });
+  })();
 </script>
+
 <script>
 (function () {
   var GH_USER = 'kyledupont';
   var listEl = document.getElementById('ticker-list');
   var statusEl = document.getElementById('ticker-status');
   var REFRESH_MS = 5 * 60 * 1000;
-  var commitMsgCache = {}; // sha -> first line of commit message, kept across refreshes
+  var commitMsgCache = {};
 
   function timeAgo(iso) {
     var diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -445,8 +543,6 @@
     });
   }
 
-  // Keep the ticker from ever surfacing the classcompass.io name or URL --
-  // that site is fine to allude to generically, just not to name.
   function sanitizeRepo(repo) {
     return /class-?compass(\.io)?/i.test(repo) ? 'a live web app' : repo;
   }
@@ -460,10 +556,6 @@
     var rawRepo = ev.repo && ev.repo.name ? ev.repo.name : 'unknown repo';
     var repo = sanitizeRepo(rawRepo);
     if (ev.type === 'PushEvent' && ev.payload) {
-      // GitHub's public events API no longer includes payload.commits for
-      // unauthenticated requests. Show ref/head immediately; the real commit
-      // message (if any) is filled in afterward by fetchCommitMessage below,
-      // one lookup per row instead of blocking the initial render on it.
       var branch = (ev.payload.ref || '').replace('refs/heads/', '');
       var sha = ev.payload.head || '';
       var short = sha ? sha.slice(0, 7) : '';
@@ -496,7 +588,7 @@
         if (msg) commitMsgCache[sha] = msg;
         return msg;
       })
-      .catch(function () { return null; }); // best-effort -- fall back stays in place on failure/rate-limit
+      .catch(function () { return null; });
   }
 
   function render(events) {
@@ -520,13 +612,11 @@
     }
     statusEl.innerHTML = '<span class="live-dot"></span>Live · updated ' + new Date().toLocaleTimeString();
 
-    // Fill in real commit messages in the background -- one request per
-    // visible push row, at most 8, so it never blocks the initial paint.
     pending.forEach(function (p) {
       fetchCommitMessage(p.repo, p.sha).then(function (msg) {
         if (!msg) return;
         var el = document.querySelector('#ticker-row-' + p.index + ' .ticker-msg');
-        if (el) el.textContent = msg; // textContent, not innerHTML -- already safe from the raw API string
+        if (el) el.textContent = msg;
       });
     });
   }
