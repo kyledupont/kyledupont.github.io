@@ -538,7 +538,6 @@
   var listEl = document.getElementById('ticker-list');
   var statusEl = document.getElementById('ticker-status');
   var REFRESH_MS = 5 * 60 * 1000;
-  var commitMsgCache = {};
 
   function timeAgo(iso) {
     var diff = (Date.now() - new Date(iso).getTime()) / 1000;
@@ -564,55 +563,24 @@
     return msg.replace(/class-?compass(\.io)?/gi, 'a live website');
   }
 
-  function describe(ev) {
-    var rawRepo = ev.repo && ev.repo.name ? ev.repo.name : 'unknown repo';
-    var repo = sanitizeRepo(rawRepo);
-    if (ev.type === 'PushEvent' && ev.payload) {
-      var branch = (ev.payload.ref || '').replace('refs/heads/', '');
-      var sha = ev.payload.head || '';
-      var short = sha ? sha.slice(0, 7) : '';
-      var cached = sha && commitMsgCache[sha];
-      return {
-        repo: repo,
-        rawRepo: rawRepo,
-        msg: cached || ('pushed to ' + (branch || 'a branch') + (short ? ' (' + short + ')' : '')),
-        sha: sha,
-        needsCommitMsg: !!sha && !cached
-      };
-    }
-    if (ev.type === 'CreateEvent' && ev.payload) {
-      return { repo: repo, msg: sanitizeMsg('created ' + (ev.payload.ref_type || 'repository') + (ev.payload.ref ? ' ' + ev.payload.ref : '')) };
-    }
-    if (ev.type === 'PullRequestEvent' && ev.payload) {
-      return { repo: repo, msg: sanitizeMsg(ev.payload.action + ' PR: ' + (ev.payload.pull_request ? ev.payload.pull_request.title : '')) };
-    }
-    if (ev.type === 'IssuesEvent' && ev.payload) {
-      return { repo: repo, msg: sanitizeMsg(ev.payload.action + ' issue: ' + (ev.payload.issue ? ev.payload.issue.title : '')) };
-    }
-    return null;
+  // Commit Search API reflects pushes immediately; the /events/public feed
+  // GitHub itself documents as best-effort and can lag by hours, so it's
+  // not usable for a "live" ticker.
+  function describe(item) {
+    var rawRepo = item.repository && item.repository.full_name ? item.repository.full_name : 'unknown repo';
+    var rawMsg = item.commit && item.commit.message ? item.commit.message.split('\n')[0] : 'updated the repo';
+    var when = item.commit && item.commit.author ? item.commit.author.date : item.commit && item.commit.committer ? item.commit.committer.date : null;
+    if (!when) return null;
+    return { repo: sanitizeRepo(rawRepo), msg: sanitizeMsg(rawMsg), when: when };
   }
 
-  function fetchCommitMessage(repo, sha) {
-    return fetch('https://api.github.com/repos/' + repo + '/commits/' + sha)
-      .then(function (r) { if (!r.ok) throw new Error('commit lookup failed'); return r.json(); })
-      .then(function (data) {
-        var msg = data.commit && data.commit.message ? sanitizeMsg(data.commit.message.split('\n')[0]) : null;
-        if (msg) commitMsgCache[sha] = msg;
-        return msg;
-      })
-      .catch(function () { return null; });
-  }
-
-  function render(events) {
+  function render(items) {
     var rows = [];
-    var pending = [];
-    for (var i = 0; i < events.length && rows.length < 8; i++) {
-      var d = describe(events[i]);
+    for (var i = 0; i < items.length && rows.length < 8; i++) {
+      var d = describe(items[i]);
       if (!d) continue;
-      var rowIndex = rows.length;
-      if (d.needsCommitMsg) pending.push({ index: rowIndex, repo: d.rawRepo, sha: d.sha });
       rows.push(
-        '<li id="ticker-row-' + rowIndex + '"><span class="ticker-when">' + timeAgo(events[i].created_at) + '</span>' +
+        '<li><span class="ticker-when">' + timeAgo(d.when) + '</span>' +
         '<span><span class="ticker-repo">' + escapeHtml(d.repo) + '</span><br>' +
         '<span class="ticker-msg">' + escapeHtml(d.msg) + '</span></span></li>'
       );
@@ -623,23 +591,17 @@
       listEl.innerHTML = rows.join('');
     }
     statusEl.innerHTML = '<span class="live-dot"></span>Live · updated ' + new Date().toLocaleTimeString();
-
-    pending.forEach(function (p) {
-      fetchCommitMessage(p.repo, p.sha).then(function (msg) {
-        if (!msg) return;
-        var el = document.querySelector('#ticker-row-' + p.index + ' .ticker-msg');
-        if (el) el.textContent = msg;
-      });
-    });
   }
 
   function load() {
-    fetch('https://api.github.com/users/' + GH_USER + '/events/public')
+    fetch('https://api.github.com/search/commits?q=author:' + GH_USER + '&sort=author-date&order=desc&per_page=8', {
+      headers: { 'Accept': 'application/vnd.github.cloak-preview+json' }
+    })
       .then(function (r) {
         if (!r.ok) throw new Error('GitHub API returned ' + r.status);
         return r.json();
       })
-      .then(render)
+      .then(function (data) { render(data.items || []); })
       .catch(function () {
         statusEl.textContent = 'Live activity unavailable right now — check back shortly.';
       });
